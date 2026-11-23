@@ -4,6 +4,8 @@
 
 Sotorko AI is Team Cady Crush’s hackathon prototype for Bangladesh. It turns simulated river readings into officer-approved Bangla alerts, assigns households to shelters with space, and follows up when people ask for help or haven’t replied.
 
+**[Open the live demo](https://sotorko-ai.onrender.com/)**
+
 [Quick start](#quick-start) · [Try the demo](#try-the-demo) · [How it works](#how-it-works) · [Team and materials](#team-and-materials)
 
 ![Sotorko AI dashboard at 08:30 showing Sylhet, Chattogram, and Sunamganj on the monitoring graphic, a rising river chart, and an alert awaiting approval](docs/dashboard-preview.webp)

@@ -1,0 +1,111 @@
+:root {
+  color-scheme: light;
+  --font-latin: Inter, "Segoe UI", system-ui, sans-serif;
+  --font-bangla: "Noto Sans Bengali", "Nirmala UI", Kalpurush, system-ui, sans-serif;
+  --text-xs: .75rem;
+  --text-small: .875rem;
+  --text-body: 1rem;
+  --text-section: 1.25rem;
+  --text-kpi: 1.75rem;
+  --text-display: 2.5rem;
+  --text-hero: 3.5rem;
+
+  --space-1: .5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 2.5rem;
+  --space-6: 3rem;
+  --radius-control: .625rem;
+  --radius-card: 1.25rem;
+  --radius-pill: 100px;
+  --layout: 80rem;
+  --transition: 200ms ease-out;
+
+  --ink: #061a1f;
+  --river: #3fd0c9;
+  --teal: #1fa88f;
+  --hero: var(--ink);
+  --hero-text: #eaf6f4;
+  --hero-muted: #a8c7c2;
+  --hero-border: #527b7a;
+  --hero-surface: #0c2a30;
+  --hero-deep: #09222a;
+
+  --page: #f6f8f7;
+  --surface: #ffffff;
+  --surface-tint: #f1f6f5;
+  --surface-accent: #e3f3f0;
+  --text: #142d30;
+  --muted: #466267;
+  --border: #dbe5e2;
+  --control-border: #6b8487;
+  --accent: #005e62;
+  --accent-hover: #00484a;
+  --on-accent: #ffffff;
+  --focus: #006970;
+  --shadow: 0 10px 30px #0c282009;
+  --pipeline-glass: #f9fcfbea;
+  --rail-shadow: #99e9dc3b;
+
+  --normal: #3ccf91;
+  --watch: #f5b445;
+  --severe: #ff6b5b;
+  --info: #5aa9ff;
+  --status-good-bg: #e1f1e9;
+  --status-good-text: #09543b;
+  --status-watch-bg: #fff1d6;
+  --status-watch-text: #70460d;
+  --status-urgent-bg: #fceae6;
+  --status-urgent-text: #852b23;
+  --status-neutral-bg: #e8eef2;
+  --status-neutral-text: #304e60;
+  --risk-normal: #1b7757;
+  --risk-watch: #92600e;
+  --risk-severe: #ac4437;
+
+  --chart-grid: #d1dfdf;
+  --chart-label: #466267;
+  --chart-line: #087b83;
+  --chart-fill-top: #3fd0c95e;
+  --chart-fill-bottom: #3fd0c907;
+  --chart-threshold: #9e4033;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: var(--ink);
+  --surface: #0c2a30;
+  --surface-tint: #102f35;
+  --surface-accent: #12363d;
+  --text: #eaf6f4;
+  --muted: #8fb3ae;
+  --border: rgba(160, 220, 215, .12);
+  --control-border: #6e9395;
+  --accent: var(--river);
+  --accent-hover: #78e4dd;
+  --on-accent: #092329;
+  --focus: #70e8e0;
+  --shadow: 0 10px 30px rgba(0, 0, 0, .25);
+  --pipeline-glass: #102e34eb;
+  --rail-shadow: #3fd0c92e;
+
+  --status-good-bg: #174339;
+  --status-good-text: #b7efd7;
+  --status-watch-bg: #4a351c;
+  --status-watch-text: #ffdd98;
+  --status-urgent-bg: #4e302e;
+  --status-urgent-text: #ffc6bb;
+  --status-neutral-bg: #1d3b49;
+  --status-neutral-text: #c4e1fa;
+  --risk-normal: #3ccf91;
+  --risk-watch: #f5b445;
+  --risk-severe: #ff8071;
+
+  --chart-grid: #315258;
+  --chart-label: #a9c4c2;
+  --chart-line: #63d9d1;
+  --chart-fill-top: #3fd0c952;
+  --chart-fill-bottom: #3fd0c908;
+  --chart-threshold: #ff9a89;
+}

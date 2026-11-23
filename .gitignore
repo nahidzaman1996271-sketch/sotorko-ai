@@ -6,3 +6,6 @@
 *.webp
 !/docs/dashboard-preview.webp
 *.mp4
+/dist/
+.env
+.env.*

@@ -1,117 +1,231 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#092d26">
-  <title>Sotorko AI | Flood Response Console</title>
+  <meta name="theme-color" content="#061a1f">
+  <title data-i18n="page.title">Sotorko AI | Flood Response Console</title>
   <link rel="icon" href="/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="/style.css">
   <script type="module" src="/dashboard.js"></script>
 </head>
 <body>
-  <aside class="sidebar">
-    <a class="brand" href="#overview">
-      <span class="brand-icon" aria-hidden="true"><i></i><i></i><i></i></span>
-      <span><strong>Sotorko AI</strong><small lang="bn">সতর্ক</small></span>
-    </a>
-    <select id="section-jump" aria-label="Jump to a dashboard section"></select>
-    <nav id="console-nav" aria-label="Console">
-      <a href="#overview" aria-current="location"><span aria-hidden="true">◫</span> Overview</a>
-      <a href="#alerts"><span aria-hidden="true">◇</span> Alert approvals</a>
-      <a href="#shelters"><span aria-hidden="true">⌂</span> Shelter capacity</a>
-      <a href="#replies"><span aria-hidden="true">▤</span> Citizen replies</a>
-      <a href="#triage"><span aria-hidden="true">✚</span> Rescue triage</a>
-      <a href="#messages"><span aria-hidden="true">□</span> Outbound messages</a>
-      <a href="#activity"><span aria-hidden="true">≡</span> Activity log</a>
-    </nav>
-    <div class="side-footer">
-      <span>Team Cady Crush</span>
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="icon-brand" viewBox="0 0 24 24"><path d="M12 2C9 6.4 4 10.8 4 15a8 8 0 0 0 16 0c0-4.2-5-8.6-8-13Z"/><path d="M5 15.5c2-1.5 4.1-1.5 7 0s5 1.5 7 0"/></symbol>
+    <symbol id="icon-monitor" viewBox="0 0 24 24"><path d="M2 13h4l3-6 4 10 3-4h6M4 4h16M4 20h16"/></symbol>
+    <symbol id="icon-assess" viewBox="0 0 24 24"><path d="M3 3v18h18M7 16l4-4 3 2 6-7"/><path d="M16 7h4v4"/></symbol>
+    <symbol id="icon-approve" viewBox="0 0 24 24"><path d="M12 22s7-3.3 7-9V5.5L12 3 5 5.5V13c0 5.7 7 9 7 9Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="icon-shelter" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8M5 10v10h14V10M10 20v-6h4v6"/></symbol>
+    <symbol id="icon-notify" viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></symbol>
+    <symbol id="icon-reply" viewBox="0 0 24 24"><path d="M20 16H8l-4 4V5h16zM8 9h8M8 12h5"/></symbol>
+    <symbol id="icon-triage" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="14" rx="2"/><path d="M9 6V4h6v2m-3 4v6m-3-3h6"/></symbol>
+    <symbol id="icon-escalate" viewBox="0 0 24 24"><path d="M4 18h7M4 13h4m6 5V6m-5 5 5-5 5 5"/></symbol>
+    <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="icon-phone" viewBox="0 0 24 24"><path d="M7 3h4l1 5-3 2a12 12 0 0 0 5 5l2-3 5 1v4c0 2-1 4-3 4C9 21 3 15 3 6c0-2 2-3 4-3Z"/></symbol>
+    <symbol id="icon-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></symbol>
+  </svg>
+  <a class="skip-link" href="#main-content" data-i18n="ui.skip">Skip to main content</a>
+
+  <header class="site-bar">
+    <div class="site-bar-inner">
+      <a class="brand" href="#overview">
+        <svg class="icon brand-mark" aria-hidden="true"><use href="#icon-brand"/></svg>
+        <span class="brand-name">Sotorko AI <span aria-hidden="true">·</span> <span class="brand-bn" lang="bn">সতর্ক</span></span>
+      </a>
+      <span class="mode"><i aria-hidden="true"></i><span data-i18n="ui.simulation">Simulation · মহড়া</span></span>
+      <div class="preferences">
+        <label class="sr-only" for="language-select" data-i18n="ui.language">Language</label>
+        <select id="language-select">
+          <option value="en" lang="en">EN</option>
+          <option value="bn" lang="bn">বাংলা</option>
+        </select>
+        <label class="sr-only" for="theme-select" data-i18n="ui.theme">Appearance</label>
+        <select id="theme-select">
+          <option value="light" data-i18n="ui.themeLight">Light</option>
+          <option value="dark" data-i18n="ui.themeDark">Dark</option>
+        </select>
+        <a class="button secondary nav-guide" href="#guide" data-guide-open data-i18n="nav.guide">Guided demo</a>
+      </div>
     </div>
-  </aside>
-  <main>
-    <div class="workspace-bar">
-      <span>Operations <span class="breadcrumb-separator" aria-hidden="true">/</span> <strong>Bangladesh</strong></span>
-      <span class="mode"><i></i> Simulation mode</span>
-    </div>
-    <header id="overview" class="page-header">
+  </header>
+
+  <main id="main-content" tabindex="-1">
+    <section id="overview" class="page-header" aria-labelledby="hero-title">
+      <div class="hero-water" aria-hidden="true"></div>
       <div class="hero-copy">
-        <p class="eyebrow">FLOOD REPLAY</p>
-        <h1>Flood response <span>overview</span></h1>
-        <p class="intro">Track river levels, approve Bangla alerts and coordinate the simulated response.</p>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Bangladesh flood drill</p>
+        <h1 id="hero-title"><span class="hero-brand" lang="bn">সতর্ক</span><span data-i18n="hero.title">Flood response, step by step</span></h1>
+        <p class="intro" data-i18n="hero.intro">Replay rising river levels. Approve Bangla alerts, guide families to shelter, and follow up when people need help.</p>
         <div class="header-actions">
-          <button id="advance" class="button primary" type="button">Advance 15 min</button>
-          <button id="reset" class="button secondary" type="button">Reset demo</button>
+          <button id="advance" class="button primary" type="button" data-i18n="hero.advance">Advance 15 min</button>
+          <a id="guide-launch" class="button secondary" href="#guide" data-guide-open data-i18n="hero.startGuide">Start guided demo</a>
+          <button id="reset" class="button quiet" type="button" data-i18n="hero.reset">Reset demo</button>
         </div>
       </div>
       <div class="basin">
-        <canvas id="basin-art" aria-hidden="true"></canvas>
+        <div class="basin-artwork"><canvas id="basin-art" aria-hidden="true"></canvas></div>
         <div class="basin-caption">
-          <span>Illustrative monitoring network</span>
-          <button id="motion-toggle" class="motion-button" type="button" hidden>Pause motion</button>
+          <span data-i18n="hero.mapCaption">Schematic monitoring map</span>
+          <button id="motion-toggle" class="motion-button" type="button" data-i18n="hero.pauseMotion" hidden>Pause motion</button>
         </div>
       </div>
-    </header>
-    <div class="notice"><span aria-hidden="true">ⓘ</span> Training simulation with fictional readings, households and shelters. All messages and rescue cases stay in the demo.</div>
+    </section>
+
+    <nav id="console-nav" class="pipeline" aria-label="Agent pipeline" data-i18n-aria="pipeline.label">
+      <ol>
+        <li><a href="#river-panel" data-pipeline="0"><svg class="icon" aria-hidden="true"><use href="#icon-monitor"/></svg><span data-i18n="pipeline.monitor">Monitor</span></a></li>
+        <li><a href="#risk" data-pipeline="1"><svg class="icon" aria-hidden="true"><use href="#icon-assess"/></svg><span data-i18n="pipeline.assess">Assess</span></a></li>
+        <li><a href="#alerts" data-pipeline="2"><svg class="icon" aria-hidden="true"><use href="#icon-approve"/></svg><span data-i18n="pipeline.approve">Approve</span></a></li>
+        <li><a href="#shelters" data-pipeline="3"><svg class="icon" aria-hidden="true"><use href="#icon-shelter"/></svg><span data-i18n="pipeline.shelter">Shelter</span></a></li>
+        <li><a href="#messages" data-pipeline="4"><svg class="icon" aria-hidden="true"><use href="#icon-notify"/></svg><span data-i18n="pipeline.notify">Notify</span></a></li>
+        <li><a href="#replies" data-pipeline="5"><svg class="icon" aria-hidden="true"><use href="#icon-reply"/></svg><span data-i18n="pipeline.replies">Replies</span></a></li>
+        <li><a href="#triage" data-pipeline="6"><svg class="icon" aria-hidden="true"><use href="#icon-triage"/></svg><span data-i18n="pipeline.triage">Triage</span></a></li>
+        <li><a href="#activity" data-pipeline="7"><svg class="icon" aria-hidden="true"><use href="#icon-escalate"/></svg><span data-i18n="pipeline.escalate">Escalate</span></a></li>
+      </ol>
+    </nav>
+    <label class="sr-only" for="section-jump" data-i18n="nav.jump">Jump to a dashboard section</label>
+    <select id="section-jump" class="section-jump" hidden></select>
     <div id="feedback" class="sr-only" role="status"></div>
+
     <div id="summary" class="summary"></div>
-    <div class="overview-grid">
-      <section class="card telemetry" aria-labelledby="river-heading">
+    <div id="phone-mobile-slot"></div>
+    <div class="operations-grid monitor-grid">
+      <section id="river-panel" class="card telemetry" aria-labelledby="river-heading">
         <div class="section-head">
-          <div><h2 id="river-heading">River level replay</h2><p>Water level by observation time</p></div>
-          <label class="sr-only" for="river">Monitoring area</label>
+          <div>
+            <h2 id="river-heading" data-i18n="river.heading">River level replay</h2>
+            <p data-i18n="river.detail">Water level by observation time</p>
+          </div>
+          <label class="sr-only" for="river" data-i18n="river.area">Monitoring area</label>
           <select id="river"></select>
         </div>
-        <div class="chart-wrap"><canvas id="chart" role="img" aria-label="Simulated river levels"></canvas></div>
-        <div class="legend"><span><i></i> River level</span><span><i></i> Demo danger threshold</span></div>
+        <div id="chart-interactive" class="chart-wrap" tabindex="0" role="group" aria-labelledby="river-heading" aria-describedby="chart-hint">
+          <canvas id="chart" role="img" aria-label="Simulated river levels" data-i18n-aria="river.chart"></canvas>
+          <div id="chart-tooltip" class="chart-tooltip" aria-hidden="true" hidden></div>
+        </div>
+        <p id="chart-hint" class="sr-only" data-i18n="river.keyboardHint">Use the left and right arrow keys to inspect recorded observations.</p>
+        <div id="chart-announcement" class="sr-only" role="status"></div>
+        <div class="legend">
+          <span><i aria-hidden="true"></i><span data-i18n="river.level">River level</span></span>
+          <span><i aria-hidden="true"></i><span data-i18n="river.threshold">Demo danger threshold</span></span>
+        </div>
       </section>
-      <section class="card risk-card" aria-labelledby="areas-heading">
-        <div class="section-head"><div><h2 id="areas-heading">Area risk</h2><p>Latest simulated monitoring results</p></div></div>
+      <section id="risk" class="card risk-card" aria-labelledby="areas-heading">
+        <div class="section-head"><div>
+          <h2 id="areas-heading" data-i18n="risk.heading">Area risk</h2>
+          <p data-i18n="risk.detail">Latest simulated monitoring results</p>
+        </div></div>
         <div id="areas" class="area-list"></div>
       </section>
     </div>
-    <div class="overview-grid response-grid">
-      <section id="alerts" class="card">
-        <div class="section-head"><div><h2>Alert approvals</h2><p>Severe alerts require an officer decision.</p></div></div>
-        <div id="approval-list" class="stack"></div>
-      </section>
-      <section id="shelters" class="card">
-        <div class="section-head"><div><h2>Shelter capacity</h2><p>Available places account for demo reservations.</p></div></div>
-        <div id="shelter-list" class="stack"></div>
-      </section>
+
+    <div class="operations-grid officer-grid">
+      <div class="officer-controls">
+        <section id="alerts" class="card" aria-labelledby="alerts-heading">
+          <div class="section-head"><div>
+            <h2 id="alerts-heading" data-i18n="alerts.heading">Alert approvals</h2>
+            <p data-i18n="alerts.detail">Severe alerts require an officer decision.</p>
+          </div></div>
+          <div id="approval-list" class="stack"></div>
+        </section>
+        <section id="shelters" class="card" aria-labelledby="shelters-heading">
+          <div class="section-head"><div>
+            <h2 id="shelters-heading" data-i18n="shelters.heading">Shelter capacity</h2>
+            <p data-i18n="shelters.detail">Available places account for demo reservations.</p>
+          </div></div>
+          <div id="shelter-list" class="stack"></div>
+        </section>
+      </div>
+      <div id="phone-desktop-slot" class="phone-slot">
+        <section id="phone" class="card phone-panel" aria-labelledby="phone-heading">
+          <div class="section-head"><div>
+            <h2 id="phone-heading" data-i18n="phone.heading">Citizen phone</h2>
+            <p data-i18n="phone.detail">See what a household receives and try a keypad reply.</p>
+          </div></div>
+          <div id="phone-content"></div>
+        </section>
+      </div>
     </div>
-    <div class="overview-grid response-grid">
-      <section id="replies" class="card">
-        <div class="section-head"><div><h2>Citizen replies</h2><p>Send a simulated Bangla text or keypad reply.</p></div></div>
-        <p id="reply-empty" class="empty">Approve an alert to unlock replies from demo households.</p>
+
+    <div class="operations-grid response-grid">
+      <section id="messages" class="card" aria-labelledby="messages-heading">
+        <div class="section-head"><div>
+          <h2 id="messages-heading" data-i18n="messages.heading">Outbound messages</h2>
+          <p data-i18n="messages.detail">Bangla SMS, WhatsApp and voice call previews.</p>
+        </div></div>
+        <div id="message-list" class="stack scroll-list"></div>
+      </section>
+      <section id="replies" class="card" aria-labelledby="replies-heading">
+        <div class="section-head"><div>
+          <h2 id="replies-heading" data-i18n="replies.heading">Citizen replies</h2>
+          <p data-i18n="replies.detail">Send a simulated Bangla text or keypad reply.</p>
+        </div></div>
+        <p id="reply-empty" class="empty" data-i18n="replies.empty">Approve an alert to unlock replies from demo households.</p>
         <form id="reply-form" hidden>
-          <label for="household">Household</label>
+          <label for="household" data-i18n="replies.household">Household</label>
           <select id="household"></select>
-          <label for="reply-text">Reply</label>
-          <textarea id="reply-text" lang="bn" required maxlength="280" rows="2" placeholder="আমরা আটকে আছি, ৫ জন"></textarea>
+          <label for="reply-text" data-i18n="replies.reply">Reply</label>
+          <textarea id="reply-text" lang="bn" required maxlength="280" rows="2" placeholder="আমরা আটকে আছি, ৫ জন" data-i18n-placeholder="replies.placeholder"></textarea>
           <div class="form-actions">
-            <button class="button secondary" type="button" data-action="sample" data-id="১">Safe · ১</button>
-            <button class="button secondary" type="button" data-action="sample" data-id="আমরা আটকে আছি, ৫ জন">Rescue sample</button>
-            <button class="button primary" type="submit">Submit reply</button>
+            <button class="button secondary" type="button" data-action="sample" data-id="১" data-i18n="replies.safeSample">Safe · ১</button>
+            <button class="button secondary" type="button" data-action="sample" data-id="আমরা আটকে আছি, ৫ জন" data-i18n="replies.rescueSample">Rescue sample</button>
+            <button class="button primary" type="submit" data-i18n="replies.submit">Submit reply</button>
           </div>
         </form>
         <div id="recipient-list" class="stack"></div>
       </section>
-      <section id="triage" class="card">
-        <div class="section-head"><div><h2>Rescue triage</h2><p>Simulated cases for officer review.</p></div></div>
+    </div>
+
+    <div class="operations-grid response-grid">
+      <section id="triage" class="card" aria-labelledby="triage-heading">
+        <div class="section-head"><div>
+          <h2 id="triage-heading" data-i18n="triage.heading">Rescue triage</h2>
+          <p data-i18n="triage.detail">Simulated cases for officer review.</p>
+        </div></div>
         <div id="case-list" class="stack"></div>
       </section>
-    </div>
-    <div class="overview-grid response-grid">
-      <section id="messages" class="card">
-        <div class="section-head"><div><h2>Outbound messages</h2><p>Bangla SMS, WhatsApp and voice call previews.</p></div></div>
-        <div id="message-list" class="stack scroll-list"></div>
-      </section>
-      <section id="activity" class="card">
-        <div class="section-head"><div><h2>Activity log</h2><p>Agent actions and officer decisions in replay order.</p></div></div>
+      <section id="activity" class="card" aria-labelledby="activity-heading">
+        <div class="section-head"><div>
+          <h2 id="activity-heading" data-i18n="activity.heading">Agent timeline</h2>
+          <p data-i18n="activity.detail">Agent actions and reasons, with the latest first.</p>
+        </div></div>
         <div id="activity-list" class="stack scroll-list"></div>
       </section>
     </div>
+
+    <footer class="site-footer">
+      <div>
+        <strong data-i18n="ui.team">Team Cady Crush</strong>
+        <p data-i18n="footer.track">Agentic AI &amp; Autonomous Systems · MU CSE FEST 2026</p>
+      </div>
+      <div class="footer-data">
+        <p><svg class="icon" aria-hidden="true"><use href="#icon-info"/></svg><span data-i18n="hero.notice">Training simulation with fictional readings, households, and shelters.</span></p>
+        <div class="footer-links">
+          <a href="https://github.com/nahidzaman1996271-sketch/sotorko-ai/blob/main/Sotorko-AI_Proposal_CadyCrush.pdf" data-i18n="footer.proposal">Project proposal</a>
+          <a href="https://github.com/nahidzaman1996271-sketch/sotorko-ai" data-i18n="footer.github">GitHub</a>
+        </div>
+      </div>
+    </footer>
+    <section id="guide" class="coachmark" aria-labelledby="guide-heading" hidden>
+      <div class="guide-heading">
+        <h2 id="guide-heading" data-i18n="guide.heading">Guided demo</h2>
+        <span id="guide-step" class="guide-step"></span>
+      </div>
+      <h3 id="guide-title"></h3>
+      <p id="guide-detail"></p>
+      <div id="guide-feedback" class="guide-feedback" role="status"></div>
+      <div class="guide-actions">
+        <button id="guide-back" class="button secondary" type="button" data-i18n="guide.back">Back</button>
+        <button id="guide-skip" class="button quiet" type="button" data-i18n="guide.skip">Skip</button>
+        <button id="guide-next" class="button primary" type="button" data-i18n="guide.next">Next</button>
+        <button id="guide-restart" class="button secondary" type="button" data-i18n="guide.restart" hidden>Restart guide</button>
+      </div>
+    </section>
+    <div id="guide-spotlight" class="guide-spotlight" aria-hidden="true" hidden></div>
   </main>
 </body>
 </html>

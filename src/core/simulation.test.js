@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
   advance, assess, classifyReply, decideAlert, initialState, receiveReply, resolveCase, shelterSpace, toggleShelter,
-} from './simulation.js';
+} from '../../simulation.js';
 
 function approvedReplay() {
   const state = initialState();

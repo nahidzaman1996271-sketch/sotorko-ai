@@ -10,7 +10,7 @@ const tributaries = [
   [[672, 178], [600, 196], [560, 206], [520, 214], [482, 246], [452, 290], [430, 334]],
 ];
 const stationPositions = { sylhet: [430, 122], chattogram: [520, 214], sunamganj: [220, 94] };
-const indicator = { Normal: '#a0ebcb', Watch: '#ffd48a', Severe: '#ffac94' };
+const indicator = { Normal: '#3ccf91', Watch: '#f5b445', Severe: '#ff6b5b' };
 
 // Sample the illustration's river paths for both strokes and moving flow markers.
 function smooth(points) {
@@ -41,9 +41,9 @@ function trace(ctx, points) {
 
 function drawTerrain(ctx) {
   const sky = ctx.createLinearGradient(0, 0, WIDTH, HEIGHT);
-  sky.addColorStop(0, '#092d26');
-  sky.addColorStop(0.52, '#0d473b');
-  sky.addColorStop(1, '#092c28');
+  sky.addColorStop(0, '#061a1f');
+  sky.addColorStop(0.52, '#0b383d');
+  sky.addColorStop(1, '#061a1f');
   ctx.fillStyle = sky;
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
@@ -77,7 +77,7 @@ function drawTerrain(ctx) {
     ctx.strokeStyle = index === 0 ? '#31b9956b' : '#369a806d';
     ctx.stroke();
     ctx.lineWidth = index === 0 ? 2 : 1;
-    ctx.strokeStyle = index === 0 ? '#a1f3c6be' : '#84d7b060';
+    ctx.strokeStyle = index === 0 ? '#74d9cdbc' : '#61b2b17a';
     ctx.stroke();
   }
 }
@@ -93,6 +93,7 @@ export function createBasinGraphic(canvas, button, preference, areas) {
   drawTerrain(ground);
 
   const stations = areas.map(area => ({ label: area.name.toUpperCase(), point: stationPositions[area.id] }));
+  let locale = { language: 'en', pause: 'Pause motion', play: 'Play motion' };
   let status = stations.map(() => 'Normal');
   let visible = true;
   let manuallyPaused = false;
@@ -111,14 +112,19 @@ export function createBasinGraphic(canvas, button, preference, areas) {
       canvas.width = pixelsWide;
       canvas.height = pixelsHigh;
     }
-    const scale = Math.max(pixelsWide / WIDTH, pixelsHigh / HEIGHT);
-    context.setTransform(scale, 0, 0, scale, (pixelsWide - WIDTH * scale) * 0.72, (pixelsHigh - HEIGHT * scale) / 2);
+    const scale = Math.min(Math.max(pixelsWide / WIDTH, pixelsHigh / HEIGHT), pixelsWide / 540);
+    const left = (pixelsWide - WIDTH * scale) / 2;
+    const top = (pixelsHigh - HEIGHT * scale) / 2;
+    context.setTransform(1, 0, 0, 1, 0, 0);
+    context.fillStyle = '#061a1f';
+    context.fillRect(0, 0, pixelsWide, pixelsHigh);
+    context.setTransform(scale, 0, 0, scale, left, top);
     context.drawImage(terrain, 0, 0, WIDTH, HEIGHT);
 
     channels.forEach((points, index) => {
       const count = index === 0 ? 7 : 3;
       for (let marker = 0; marker < count; marker++) {
-        const progress = (elapsed / (index === 0 ? 6800 : 5300) + marker / count + index * 0.13) % 1;
+        const progress = (elapsed / (index === 0 ? 11800 : 9500) + marker / count + index * 0.13) % 1;
         const [x, y] = points[Math.floor(progress * (points.length - 1))];
         context.fillStyle = index === 0 ? '#cafbe0' : '#a0e8cd';
         context.globalAlpha = 0.15 + Math.sin(progress * Math.PI) * 0.72;
@@ -147,8 +153,8 @@ export function createBasinGraphic(canvas, button, preference, areas) {
       context.beginPath();
       context.arc(x, y, 4, 0, 2 * Math.PI);
       context.fill();
-      context.font = `700 ${Math.max(10, 8 * ratio / scale)}px "Segoe UI", sans-serif`;
-      context.letterSpacing = '1px';
+      context.font = `700 ${Math.max(10, 9 * ratio / scale)}px "Noto Sans Bengali", "Nirmala UI", "Segoe UI", sans-serif`;
+      context.letterSpacing = locale.language === 'bn' ? '0px' : '1px';
       const labelWidth = context.measureText(label).width;
       const labelX = x > 450 ? x - 13 - labelWidth : x + 13;
       context.fillStyle = '#092e25df';
@@ -172,7 +178,7 @@ export function createBasinGraphic(canvas, button, preference, areas) {
     cancelAnimationFrame(frame);
     last = 0;
     button.hidden = preference.matches;
-    button.textContent = manuallyPaused ? 'Play motion' : 'Pause motion';
+    button.textContent = manuallyPaused ? locale.play : locale.pause;
     draw();
     if (visible && !paused()) frame = requestAnimationFrame(animate);
   }
@@ -191,8 +197,15 @@ export function createBasinGraphic(canvas, button, preference, areas) {
 
   return {
     get paused() { return paused(); },
-    update(severities) {
+    update(severities, nextLocale) {
       status = severities;
+      if (nextLocale) {
+        locale = nextLocale;
+        stations.forEach((station, index) => {
+          station.label = locale.language === 'bn' ? locale.labels[index] : locale.labels[index].toUpperCase();
+        });
+        button.textContent = manuallyPaused ? locale.play : locale.pause;
+      }
       draw();
     },
   };

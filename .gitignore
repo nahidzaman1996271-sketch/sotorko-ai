@@ -1,0 +1,8 @@
+# team photos and large media stay local
+*.jpg
+*.jpeg
+*.png
+!/favicon.png
+*.webp
+!/docs/dashboard-preview.webp
+*.mp4

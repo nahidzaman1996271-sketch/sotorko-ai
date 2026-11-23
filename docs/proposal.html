@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sotorko AI — Project Idea Proposal</title>
+<style>
+  @page { size: A4; margin: 13mm 14mm 12mm 14mm; }
+  :root { --ink:#10202b; --muted:#4d5d68; --teal:#0b7a75; --teal2:#e3f3f1; --amber:#d9822b; --line:#d5dee3; --red:#c0392b; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; background:#fff; }
+  body { font-family: "Segoe UI", "Nirmala UI", Arial, sans-serif; color: var(--ink); font-size: 9.6pt; line-height: 1.42; }
+  .bn { font-family: "Nirmala UI", "Kalpurush", sans-serif; }
+  h1 { font-size: 22pt; margin: 0; letter-spacing: -0.3px; }
+  h1 .bn { color: var(--teal); font-weight: 700; }
+  h2 { font-size: 11.6pt; margin: 9px 0 4px; color: var(--teal); text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 1.5px solid var(--teal); padding-bottom: 2px; }
+  h3 { font-size: 10pt; margin: 6px 0 2px; }
+  p { margin: 3px 0 5px; }
+  ul { margin: 2px 0 5px 0; padding-left: 16px; }
+  li { margin: 1.5px 0; }
+  .head { display:flex; justify-content:space-between; align-items:flex-end; border-bottom: 3px solid var(--ink); padding-bottom: 6px; margin-bottom: 6px; }
+  .tag { font-size: 10.5pt; color: var(--muted); margin-top: 2px; }
+  .p3 { font-size: 9.05pt; line-height: 1.36; }
+  .p3 h2 { margin: 7px 0 3px; }
+  .meta { white-space: nowrap; text-align:right; font-size: 8.4pt; color: var(--muted); line-height: 1.5; }
+  .meta b { color: var(--ink); }
+  .pill { display:inline-block; background: var(--teal); color:#fff; border-radius: 10px; padding: 1px 8px; font-weight:600; font-size: 8.2pt; }
+  .stats { display:grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 6px 0 6px; }
+  .stat { background: var(--teal2); border-radius: 6px; padding: 6px 8px; }
+  .stat b { display:block; font-size: 15pt; color: var(--teal); line-height: 1.1; }
+  .stat span { font-size: 7.9pt; color: var(--muted); }
+  .callout { border-left: 3px solid var(--amber); background:#fdf4ea; padding: 5px 9px; margin: 6px 0; }
+  table { width:100%; border-collapse: collapse; margin: 4px 0 6px; font-size: 8.8pt; }
+  th, td { border: 1px solid var(--line); padding: 3.5px 6px; vertical-align: top; text-align:left; }
+  th { background: #f1f5f7; }
+  .two { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .page { page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
+  .fig { border:1px solid var(--line); border-radius: 8px; padding: 6px; margin: 6px 0; }
+  .figcap { font-size: 7.9pt; color: var(--muted); margin-top: 2px; }
+  .sms { background:#eef6ee; border:1px solid #cfe3cf; border-radius: 8px; padding: 6px 9px; font-size: 9.6pt; }
+  .src { font-size: 7.3pt; color: var(--muted); border-top: 1px solid var(--line); margin-top: 6px; padding-top: 3px; line-height: 1.35; }
+  .team { display:grid; grid-template-columns: repeat(4,1fr); gap: 6px; }
+  .team div { border:1px solid var(--line); border-radius:6px; padding:5px 7px; font-size: 8.4pt; }
+  .team b { display:block; font-size: 9pt; }
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE 1 ============ -->
+<section class="page">
+  <div class="head">
+    <div>
+      <h1>Sotorko AI <span class="bn">সতর্ক</span></h1>
+      <div class="tag">An autonomous multi-agent system that turns flood forecasts into life-saving action, in Bangla, before the water arrives.</div>
+    </div>
+    <div class="meta">
+      <span class="pill">Agentic AI &amp; Autonomous Systems</span><br>
+      Team <b>Cady Crush</b> · Daffodil International University<br>
+      AI Builders Hackathon 2026 · MU CSE Fest
+    </div>
+  </div>
+
+  <h2>1. Problem identification and importance</h2>
+  <p>Bangladesh sits on the delta of the Ganges, Brahmaputra and Meghna, and floods return every monsoon. In August 2024, flash floods in the east, described by UNICEF as the worst in three decades, hit <b>5.8 million people across 11 districts</b>. More than <b>500,000 people</b> crowded into 3,403 shelters, and <b>over 2 million children</b> were put at risk. Two years earlier, Sylhet suffered one of its worst floods in living memory.</p>
+
+  <div class="stats">
+    <div class="stat"><b>5.8 M</b><span>people affected, Aug 2024 eastern floods (11 districts)</span></div>
+    <div class="stat"><b>3,403</b><span>evacuation shelters in use, about 502,500 people inside</span></div>
+    <div class="stat"><b>2 M+</b><span>children at risk (UNICEF)</span></div>
+    <div class="stat"><b>92%</b><span>of mobile towers in Feni out of service at one point</span></div>
+  </div>
+
+  <p><b>The forecast exists. The warning does not arrive.</b> The Flood Forecasting and Warning Centre (FFWC), the Meteorological Department (BMD) and Google Flood Hub already publish river-level and rainfall forecasts days ahead. The gap is the <b>last mile</b>:</p>
+  <ul>
+    <li><b>Wrong format:</b> warnings are technical bulletins ("danger level +45 cm at Amalshid") on websites, often in English, not instructions a farmer or a mother can act on.</li>
+    <li><b>Wrong channel:</b> many people at risk use basic phones, have no data, or cannot read long text. Elderly and low-literacy people are left out.</li>
+    <li><b>Wrong timing:</b> once water rises, power and towers fail (92% of Feni's towers were down at one point). A warning that leaves after the peak never arrives.</li>
+    <li><b>One-way:</b> after a warning goes out, nobody knows who is safe, who is stranded, or which shelter is already full.</li>
+  </ul>
+  <div class="callout"><b>Why it matters:</b> every hour of usable lead time lets families move people, livestock and documents to safety. The data to buy those hours already exists; what is missing is an autonomous system that acts on it for every union, every household, around the clock.</div>
+
+  <h2>2. Proposed AI-powered solution</h2>
+  <p><b>Sotorko AI</b> is a team of cooperating AI agents that watches the data, decides who is at risk, and acts on its own. It alerts people in plain Bangla on whatever phone they have, routes them to a shelter that still has room, listens to their replies, and escalates the stranded to rescuers. A human officer approves every high-severity alert.</p>
+  <table>
+    <tr><th style="width:22%">Agent</th><th>What it does autonomously</th></tr>
+    <tr><td><b>1. Monitor</b></td><td>Polls FFWC water levels and forecasts, BMD rainfall, Google Flood Hub and Open-Meteo every 15 minutes, and detects rising trends and threshold crossings.</td></tr>
+    <tr><td><b>2. Risk Assessor</b></td><td>Combines forecasts, terrain and past flood extents into a risk score per <b>union/upazila</b>, with time-to-impact, and explains its reasoning.</td></tr>
+    <tr><td><b>3. Bangla Communicator</b></td><td>Writes short, local, action-first alerts in Bangla (and Sylheti or Chittagonian phrasing where needed). Sends them by <b>SMS, WhatsApp or automated voice call</b>.</td></tr>
+    <tr><td><b>4. Shelter Router</b></td><td>Finds the nearest reachable shelter <b>with free capacity</b>, and redirects people when it fills up.</td></tr>
+    <tr><td><b>5. Rescue Triage</b></td><td>Reads free-text Bangla replies ("আমরা আটকে আছি, ৫ জন", "we're stuck, 5 people"), scores urgency, and dispatches volunteers or rescue teams with a location.</td></tr>
+    <tr><td><b>Orchestrator</b></td><td>Plans and coordinates the agents, keeps an audit log, asks a human officer to approve severe alerts, and checks results: who replied "safe", who must be re-alerted.</td></tr>
+  </table>
+</section>
+
+<!-- ============ PAGE 2 ============ -->
+<section class="page">
+  <h2>3. How it works: workflow and user journey</h2>
+  <div class="fig">
+    <svg viewBox="0 0 760 210" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="11">
+      <defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#10202b"/></marker></defs>
+      <!-- sources -->
+      <rect x="6" y="14" width="118" height="128" rx="8" fill="#f1f5f7" stroke="#b9c7cf"/>
+      <text x="65" y="32" text-anchor="middle" font-weight="700">Open data</text>
+      <text x="65" y="52" text-anchor="middle">FFWC river levels</text>
+      <text x="65" y="70" text-anchor="middle">BMD rainfall</text>
+      <text x="65" y="88" text-anchor="middle">Google Flood Hub</text>
+      <text x="65" y="106" text-anchor="middle">Open-Meteo</text>
+      <text x="65" y="124" text-anchor="middle">Shelter registry</text>
+      <!-- orchestrator band -->
+      <rect x="150" y="6" width="452" height="146" rx="10" fill="#e3f3f1" stroke="#0b7a75"/>
+      <text x="376" y="24" text-anchor="middle" font-weight="700" fill="#0b7a75">ORCHESTRATOR · plan → act → verify loop · audit log</text>
+      <g font-weight="600">
+        <rect x="164" y="40" width="96" height="44" rx="7" fill="#fff" stroke="#0b7a75"/><text x="212" y="66" text-anchor="middle">Monitor</text>
+        <rect x="274" y="40" width="96" height="44" rx="7" fill="#fff" stroke="#0b7a75"/><text x="322" y="60" text-anchor="middle">Risk</text><text x="322" y="74" text-anchor="middle">Assessor</text>
+        <rect x="384" y="40" width="96" height="44" rx="7" fill="#fff" stroke="#0b7a75"/><text x="432" y="60" text-anchor="middle">Bangla</text><text x="432" y="74" text-anchor="middle">Communicator</text>
+        <rect x="494" y="40" width="96" height="44" rx="7" fill="#fff" stroke="#0b7a75"/><text x="542" y="60" text-anchor="middle">Shelter</text><text x="542" y="74" text-anchor="middle">Router</text>
+        <rect x="384" y="98" width="206" height="40" rx="7" fill="#fff" stroke="#c0392b"/><text x="487" y="122" text-anchor="middle">Rescue Triage (reads replies)</text>
+        <rect x="164" y="98" width="206" height="40" rx="7" fill="#fdf4ea" stroke="#d9822b"/><text x="267" y="116" text-anchor="middle">Human officer approves</text><text x="267" y="130" text-anchor="middle" font-weight="400">high-severity alerts</text>
+      </g>
+      <line x1="124" y1="62" x2="162" y2="62" stroke="#10202b" marker-end="url(#a)"/>
+      <line x1="260" y1="62" x2="272" y2="62" stroke="#10202b" marker-end="url(#a)"/>
+      <line x1="370" y1="62" x2="382" y2="62" stroke="#10202b" marker-end="url(#a)"/>
+      <line x1="480" y1="62" x2="492" y2="62" stroke="#10202b" marker-end="url(#a)"/>
+      <line x1="322" y1="84" x2="322" y2="96" stroke="#10202b" marker-end="url(#a)"/>
+      <!-- channels -->
+      <rect x="628" y="14" width="126" height="128" rx="8" fill="#f1f5f7" stroke="#b9c7cf"/>
+      <text x="691" y="32" text-anchor="middle" font-weight="700">Citizens</text>
+      <text x="691" y="52" text-anchor="middle">SMS (any phone)</text>
+      <text x="691" y="70" text-anchor="middle">WhatsApp</text>
+      <text x="691" y="88" text-anchor="middle">Bangla voice call</text>
+      <text x="691" y="106" text-anchor="middle">Volunteers / imam</text>
+      <text x="691" y="124" text-anchor="middle">Union Parishad</text>
+      <line x1="590" y1="62" x2="626" y2="62" stroke="#10202b" marker-end="url(#a)"/>
+      <path d="M626,118 L592,118" stroke="#c0392b" stroke-dasharray="4 3" marker-end="url(#a)" fill="none"/>
+      <text x="380" y="176" text-anchor="middle" fill="#4d5d68">Closed loop: replies such as "safe", "stuck" or "need boat" flow back to Triage, and anyone who hasn't replied is re-alerted or escalated.</text>
+      <text x="380" y="196" text-anchor="middle" fill="#4d5d68">Every decision is logged with the data and reasoning behind it, so officers can audit and override.</text>
+    </svg>
+    <div class="figcap">Figure 1. Sotorko AI architecture: five specialist agents under one orchestrator, with a human in the loop.</div>
+  </div>
+
+  <h3>One user's journey: Rahima, a mother in Fulgazi, Feni</h3>
+  <ol style="margin:2px 0 5px; padding-left:17px">
+    <li><b>T-36 h:</b> Monitor sees the Muhuri river forecast crossing danger level. Risk Assessor flags 14 unions in Fulgazi and Parshuram as <i>high risk, around 30 h to impact</i>.</li>
+    <li><b>T-34 h:</b> Orchestrator drafts the campaign and an Upazila officer approves it with one tap on the dashboard.</li>
+    <li><b>T-33 h:</b> Rahima's basic phone gets an SMS and, because she didn't open it, an automated Bangla voice call:<br>
+      <div class="sms bn" style="margin-top:3px">সতর্কতা: আগামীকাল দুপুরের মধ্যে আপনার এলাকায় বন্যার পানি উঠতে পারে। আজই শিশু ও বয়স্কদের নিয়ে <b>দক্ষিণ আনন্দপুর সরকারি প্রাথমিক বিদ্যালয় আশ্রয়কেন্দ্রে</b> (১.২ কিমি) যান। নিরাপদ থাকলে "1" লিখে পাঠান, সাহায্য লাগলে "2"।</div>
+      <span style="font-size:8.2pt;color:#4d5d68">"Warning: flood water may reach your area by tomorrow noon. Take children and elders to the South Anandapur Govt. Primary School shelter (1.2 km) today. Reply 1 if safe, 2 if you need help." The shelter name is illustrative.</span></li>
+    <li><b>T-20 h:</b> That shelter reaches 90% capacity, so Shelter Router redirects new arrivals to the next shelter that still has room.</li>
+    <li><b>T-6 h:</b> 18% of households haven't replied. Orchestrator re-calls them and alerts the ward volunteer and the mosque imam with the list. A reply of "2, 5 people, roof" is triaged as <b>critical</b> and sent to the nearest rescue boat.</li>
+    <li><b>Peak:</b> even when towers fail, people were warned a day earlier, and volunteers already hold offline lists of who is still at home.</li>
+  </ol>
+
+  <h2>4. Proposed AI approach, data and integrations</h2>
+  <table>
+    <tr><th style="width:24%">Layer</th><th>Tools and models</th></tr>
+    <tr><td>Agent reasoning</td><td>An LLM with tool calling (for example Claude) as the planner for each agent. A durable workflow engine keeps state, retries and an audit trail. Guardrails: an allow-list of tools, rate limits, and human approval above a set severity.</td></tr>
+    <tr><td>Flood-risk model</td><td>A gradient-boosted model (XGBoost) trained on historical FFWC water levels, BMD rainfall and past flood extents (Sentinel-1 satellite archive). Outputs a risk score and hours-to-impact per union. The LLM explains, the model decides.</td></tr>
+    <tr><td>Bangla language</td><td>LLM generation in Bangla with fixed templates for critical facts (time, place, shelter). Unicode normalisation (NFC), and a fine-tuned BanglaBERT classifier to triage replies (safe, stuck, medical, need boat).</td></tr>
+    <tr><td>Voice</td><td>Bangla text-to-speech for outbound calls, and keypad or speech replies (IVR) for people who cannot read.</td></tr>
+    <tr><td>Delivery</td><td>Bulk SMS gateway (works on every phone), WhatsApp Business API, voice-call API, and a web dashboard for officers and volunteers.</td></tr>
+    <tr><td>Geo</td><td>Union and upazila boundaries, OpenStreetMap roads and a shelter registry for nearest-reachable-shelter routing.</td></tr>
+  </table>
+</section>
+
+<!-- ============ PAGE 3 ============ -->
+<section class="page p3">
+  <h2>5. Target users and expected impact</h2>
+  <div class="two">
+    <div>
+      <h3>Who we serve</h3>
+      <ul>
+        <li><b>Households in flood-prone unions</b>, especially basic-phone users, the elderly, people with disabilities, and low-literacy families.</li>
+        <li><b>Union Parishad and Upazila disaster officers</b>, who get a live risk map, one-tap approval and shelter occupancy.</li>
+        <li><b>Volunteers and NGOs</b> (for example Red Crescent and local youth groups), who get a prioritised rescue list with locations.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Expected impact</h3>
+      <ul>
+        <li><b>More lead time:</b> warnings go out hours to days before the peak, while networks still work.</li>
+        <li><b>Higher reach:</b> SMS plus voice reaches people that apps and websites miss.</li>
+        <li><b>Fewer overcrowded shelters</b> through capacity-aware routing.</li>
+        <li><b>Faster rescue:</b> stranded families are found from their replies, not by chance.</li>
+        <li><b>Measured:</b> reply rate, time to evacuate, unreached households, shelter balance.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>6. Innovation and feasibility</h2>
+  <h3>What is new</h3>
+  <ul>
+    <li><b>Agentic, not a broadcast:</b> the system plans, acts, checks results and re-acts without a human pushing buttons, while keeping a human in charge of severe decisions.</li>
+    <li><b>Two-way and closed-loop:</b> Bangla replies become rescue tasks, and silence itself triggers escalation.</li>
+    <li><b>Capacity-aware shelter routing</b> instead of a static "nearest shelter" list.</li>
+    <li><b>Inclusive by design:</b> voice calls for people who cannot read, and offline volunteer lists for when towers fail.</li>
+  </ul>
+  <h3>Why it is feasible</h3>
+  <ul>
+    <li><b>The data is public:</b> FFWC, BMD, Google Flood Hub and Open-Meteo already provide forecasts, so we build on top of them rather than replace them.</li>
+    <li><b>Proven components:</b> LLM APIs, SMS and voice gateways, and Bangla NLP models exist today. Our work is the agent orchestration, the risk model and the Bangla user experience.</li>
+    <li><b>Phased rollout:</b> (1) a 4-week pilot with historical data replaying the 2024 Feni flood; (2) a live pilot in one flood-prone upazila in Sylhet or Sunamganj with its Union Parishads; (3) scale through district disaster offices.</li>
+    <li><b>Risks we have planned for:</b> false alarms (human approval, confidence thresholds, short template messages), network failure (early alerts and offline lists), and privacy (opt-in phone numbers, minimal data, encrypted storage).</li>
+  </ul>
+
+  <h2>7. Business model and sustainability</h2>
+  <table>
+    <tr><th style="width:26%">Stream</th><th>How it pays</th></tr>
+    <tr><td><b>Free for citizens</b></td><td>Alerts are always free to receive. People at risk never pay.</td></tr>
+    <tr><td>Government (B2G)</td><td>An annual subscription per district or upazila for the officer dashboard and automated alerting, through the Department of Disaster Management and local government.</td></tr>
+    <tr><td>NGOs and anticipatory-action funds</td><td>Humanitarian agencies already fund early action before floods. Sotorko AI provides the trigger, the reach and the audit trail they need.</td></tr>
+    <tr><td>Telecom partnership</td><td>Mobile operators provide subsidised SMS and voice as part of their social commitments, in return for brand visibility and network-impact data.</td></tr>
+    <tr><td>Data services</td><td>Anonymised, aggregated risk and evacuation insights for insurers, microfinance lenders and agriculture.</td></tr>
+  </table>
+  <p><b>Sustainability:</b> SMS and API costs scale with the number of people at risk, which is exactly what funders pay for. The core is open-source, so other disasters (cyclones, landslides, heatwaves) and other countries can reuse it. Local ownership through Union Parishads and volunteers keeps it working after the hackathon.</p>
+
+  <h2>8. Team Cady Crush</h2>
+  <div class="team">
+    <div><b>Nahid Ibn Zaman</b>Team Leader · Developer &amp; Backend<br><span style="color:#4d5d68">SWE, DIU</span></div>
+    <div><b>Md. Rasel Hasan Sabuj</b>Agent orchestration &amp; messaging integrations<br><span style="color:#4d5d68">SWE, DIU</span></div>
+    <div><b>Md Tusher Hossen</b>AI risk model &amp; Bangla NLP<br><span style="color:#4d5d68">CSE, DIU</span></div>
+    <div><b>Md. Ha-Mim Ferdowsh</b>Data pipeline &amp; low-cost river sensors<br><span style="color:#4d5d68">EEE, DIU</span></div>
+  </div>
+
+  <div class="src"><b>Sources:</b> UN OCHA, Bangladesh Eastern Flash Flood Situation Report No. 02 (30 Aug 2024), ReliefWeb; UNICEF press release "Two million children at risk as worst floods in three decades lash through eastern Bangladesh" (Aug 2024); ACAPS Briefing Note, Bangladesh Flooding (4 Sep 2024); FFWC/BWDB and BMD public forecast services; Google Flood Hub. Example messages, places and percentages in Section 3 are illustrative.</div>
+</section>
+</body>
+</html>

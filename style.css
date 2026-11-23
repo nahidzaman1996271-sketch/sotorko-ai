@@ -116,6 +116,8 @@ select { appearance: none; padding-right: 30px; background-image: linear-gradien
 .badge.severe, .badge.rescue { background: #f9e6df; color: #8c3a26; }
 .badge.watch, .badge.pending { background: #fcf1d7; color: #754f13; }
 .badge.safe, .badge.approved { background: #dbf2e7; color: #136044; }
+.badge.no-response, .badge.medical, .badge.help-needed { background: #f9e6df; color: #8c3a26; }
+.badge.needs-review, .badge.awaiting-reply { background: #fcf1d7; color: #754f13; }
 .empty { color: var(--muted); background: #f7faf8; border: 1px dashed #d7e5df; padding: 12px; border-radius: 8px; font-size: .92rem; }
 .stack-item .form-actions { margin-top: 8px; }
 .stack-item .button { min-height: 34px; padding: 5px 9px; }

@@ -4,7 +4,7 @@ import {
 import { createBasinGraphic } from './basin.js';
 
 const element = id => document.getElementById(id);
-const storageKey = 'sotorko-demo-v2';
+const storageKey = 'sotorko-demo-v3';
 const chart = element('chart');
 const river = element('river');
 const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -13,8 +13,12 @@ let chartFrame = 0;
 let state = initialState();
 
 try {
-  const saved = localStorage.getItem(storageKey);
-  if (saved) state = JSON.parse(saved);
+  const saved = JSON.parse(localStorage.getItem(storageKey) ?? 'null');
+  // Only restore a run that matches the current replay; anything else falls back to a fresh start.
+  const valid = saved && Number.isInteger(saved.tick) && saved.tick >= 0 && saved.tick < timeline.length
+    && ['alerts', 'shelters', 'recipients', 'outbox', 'cases', 'activity'].every(key => Array.isArray(saved[key]))
+    && saved.shelters.length === state.shelters.length;
+  if (valid) state = saved;
 } catch {
   // The replay still works when browser storage is unavailable.
 }
@@ -62,7 +66,10 @@ function render(replayAdvanced = false) {
     const buttons = alert.status === 'pending'
       ? `<div class="form-actions">${action('approve', alert.area, 'Approve simulated alert', true)}${action('reject', alert.area, 'Reject')}</div>`
       : '';
-    return item(`${row(areaName(alert.area), badge(status))}<p class="meta">Severe threshold crossed at ${timeAt(alert.tick)}.</p>${buttons}`);
+    const note = alert.reraised
+      ? `Re-raised at ${timeAt(alert.tick)}: the river kept rising after a rejection.`
+      : `Severe threshold crossed at ${timeAt(alert.tick)}.`;
+    return item(`${row(areaName(alert.area), badge(status))}<p class="meta">${note}</p>${buttons}`);
   }).join('') || empty('No severe alerts. Advance the replay to simulate rising river levels.');
 
   element('shelter-list').innerHTML = state.shelters.map(shelter => {
@@ -123,7 +130,7 @@ function renderReplies() {
   const openFirst = [...state.cases].sort((a, b) => Number(Boolean(a.resolved)) - Number(Boolean(b.resolved)));
   element('case-list').innerHTML = openFirst.map(incident => item(
     `${row(incident.name, badge(incident.resolved ? 'Closed' : incident.category))}
-      <p class="meta">${timeAt(incident.tick)} · ${incident.people === null ? 'Group size unknown' : `${incident.people} people reported`}</p>
+      <p class="meta">${timeAt(incident.tick)} · ${incident.people === null ? 'Group size unknown' : `${incident.people} people ${incident.category === 'No response' ? 'in household' : 'reported'}`}${incident.resolution ? ` · ${esc(incident.resolution)}` : ''}</p>
       <p class="message" dir="auto"${/\p{Script=Bengali}/u.test(incident.text) ? ' lang="bn"' : ''}>${esc(incident.text)}</p>
       ${incident.resolved ? '' : `<div class="form-actions">${action('resolve', incident.id, 'Close demo case')}</div>`}`,
   )).join('') || empty('Replies asking for help or needing review appear here.');
@@ -145,7 +152,7 @@ function drawChart(progress = 1) {
   const left = 36;
   const right = width - 26;
   const levels = timeline.slice(0, state.tick + 1).map(entry => entry.readings[index][0]);
-  const low = Math.floor(Math.min(levels[0], area.threshold) - 0.15);
+  const low = Math.floor(Math.min(...levels, area.threshold) - 0.15);
   const high = Math.max(low + 2, Math.ceil(Math.max(...levels, area.threshold) + 0.1));
   const x = tick => left + (right - left) * tick / (timeline.length - 1);
   const y = level => bottom - (level - low) * (bottom - top) / (high - low);

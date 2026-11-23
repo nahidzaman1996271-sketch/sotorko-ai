@@ -18,7 +18,8 @@ Sotorko AI is Team Cady Crush’s hackathon prototype for Bangladesh. It turns s
 - **Approve severe alerts.** Review the threshold crossing and approve or reject delivery. The Bangla outbox previews SMS, WhatsApp, and voice calls.
 - **Reroute when a shelter fills.** The shelter router reserves space for each household and reassigns it when the original shelter fills.
 - **Read Bangla replies.** A keypad reply can mark a household safe. A message like **আমরা আটকে আছি, ৫ জন** (“We’re stranded, five people”) creates a rescue case for officer review.
-- **Follow up and audit.** The orchestrator queues a simulated Bangla voice reminder for households still awaiting a reply and records each decision in the activity log.
+- **Follow up, escalate and audit.** The orchestrator queues a simulated Bangla voice reminder for households still awaiting a reply, escalates anyone still silent to a ward volunteer, and records each decision in the activity log.
+- **Re-raise rejected alerts.** If an officer rejects an alert and the river keeps rising by 0.25 m or more, the alert comes back for review.
 
 ## Quick start
 
@@ -39,6 +40,7 @@ Open **[http://127.0.0.1:4173](http://127.0.0.1:4173)**. The demo runs without p
 | 3 | Select **Simulate full** on **Sylhet School Shelter**. | The shelter router reassigns households to **Sylhet Community Hall** and adds new delivery previews. |
 | 4 | Submit **Safe · ১** for Rahima and **Rescue sample** for Jamal. | Rahima is marked safe. Jamal’s message opens a rescue case for five people. |
 | 5 | Advance to **08:30**. | Salma receives a simulated voice follow-up. Chattogram’s severe alert enters its own approval queue. |
+| 6 | Advance to **08:45**. | Salma is still silent, so a **No response** case asks the ward volunteer to check in person. If a household later replies safe, its open case closes automatically. |
 
 Use **Reset demo** to return to 08:00. The current run is saved in your browser. Select **Pause motion** for a still graphic, or use your device’s reduced-motion setting.
 
@@ -65,7 +67,7 @@ The demo uses **Node.js**, **vanilla JavaScript**, **CSS**, and **Canvas**. The 
 | [dashboard.js](dashboard.js) | Dashboard controls, chart rendering, and browser storage |
 | [basin.js](basin.js) | Animated monitoring illustration and risk markers |
 | [server.mjs](server.mjs) | Local HTTP server |
-| [simulation.test.js](simulation.test.js) | Tests for approval, rejection, shelter rerouting, reply triage, and follow-ups |
+| [simulation.test.js](simulation.test.js) | Tests for approval, rejection and re-raising, shelter rerouting, Bangla and English reply triage, follow-ups, and escalation |
 
 Run the workflow tests with `npm test`.
 

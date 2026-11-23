@@ -1,13 +1,15 @@
 const WIDTH = 640;
 const HEIGHT = 306;
-const mainRiver = [[244, -28], [299, 17], [288, 49], [333, 84], [324, 122], [373, 153],
-  [365, 202], [417, 231], [404, 267], [483, 322]];
+// Schematic, north up. The Surma enters from the east past Sylhet and flows west to Sunamganj;
+// the Kushiyara runs south of it; Chattogram sits far to the south-east on the separate Karnaphuli.
+const mainRiver = [[672, 104], [580, 118], [500, 106], [430, 122], [360, 100], [290, 113],
+  [220, 94], [140, 110], [60, 88], [-32, 104]];
 const tributaries = [
-  [[659, 15], [573, 29], [545, 55], [494, 57], [468, 51], [422, 21], [396, -10]],
-  [[39, 211], [117, 208], [149, 183], [212, 198], [248, 178], [306, 180], [365, 202]],
-  [[655, 203], [571, 182], [524, 204], [479, 198], [417, 231]],
+  [[672, 142], [590, 152], [500, 158], [400, 150], [300, 168], [200, 160], [100, 180], [-32, 172]],
+  [[252, -24], [246, 26], [228, 60], [220, 94]],
+  [[672, 178], [600, 196], [560, 206], [520, 214], [482, 246], [452, 290], [430, 334]],
 ];
-const stationPositions = { sylhet: [373, 153], chattogram: [494, 57], sunamganj: [417, 231] };
+const stationPositions = { sylhet: [430, 122], chattogram: [520, 214], sunamganj: [220, 94] };
 const indicator = { Normal: '#a0ebcb', Watch: '#ffd48a', Severe: '#ffac94' };
 
 // Sample the illustration's river paths for both strokes and moving flow markers.

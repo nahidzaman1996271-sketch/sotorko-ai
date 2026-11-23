@@ -40,13 +40,22 @@ function log(state, agent, message) {
   state.activity.unshift({ tick: state.tick, agent, message });
 }
 
+// A rejected alert is raised again once the river climbs this much further.
+export const REALERT_RISE = 0.25;
+
 function monitor(state) {
   log(state, 'Monitor', 'Read river levels and 24-hour rainfall for all three demo areas.');
   areas.forEach((area, index) => {
     const risk = assess(index, state.tick);
-    if (risk.severity !== 'Severe' || state.alerts.some(alert => alert.area === area.id)) return;
-    state.alerts.push({ area: area.id, status: 'pending', tick: state.tick });
-    log(state, 'Risk Assessor', `${area.name} reached ${risk.level.toFixed(2)} m, above the ${area.threshold.toFixed(2)} m demo danger threshold. Alert held for officer approval.`);
+    if (risk.severity !== 'Severe') return;
+    const existing = state.alerts.filter(alert => alert.area === area.id);
+    if (existing.some(alert => alert.status !== 'rejected')) return;
+    const rejected = existing.at(-1);
+    if (rejected && risk.level - (rejected.level ?? Infinity) < REALERT_RISE) return;
+    state.alerts.push({ area: area.id, status: 'pending', tick: state.tick, level: risk.level, reraised: Boolean(rejected) });
+    log(state, 'Risk Assessor', rejected
+      ? `${area.name} rose to ${risk.level.toFixed(2)} m, ${(risk.level - rejected.level).toFixed(2)} m above the rejected alert. Re-raised for officer approval.`
+      : `${area.name} reached ${risk.level.toFixed(2)} m, above the ${area.threshold.toFixed(2)} m demo danger threshold. Alert held for officer approval.`);
   });
 }
 
@@ -134,14 +143,32 @@ export function toggleShelter(state, shelterId) {
   return true;
 }
 
+// Patterns are NFC-normalised so precomposed and decomposed Bangla letters (য়, ড়) both match.
+const bn = source => new RegExp(source.normalize('NFC'), 'u');
+const NUMBER_WORDS = Object.fromEntries(Object.entries({
+  এক: 1, দুই: 2, দু: 2, তিন: 3, চার: 4, পাঁচ: 5, ছয়: 6, সাত: 7, আট: 8, নয়: 9, দশ: 10,
+  one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10,
+}).map(([word, value]) => [word.normalize('NFC'), value]));
+const NUMBER_WORD_COUNT = bn(`(?:^|[\\s,.।])(${Object.keys(NUMBER_WORDS).join('|')})\\s*(?:জন|people|persons)`);
+// Negated distress ("not stuck", "আটকে নেই") is removed before keyword matching.
+const NEGATED_DISTRESS = bn('(?:\\b(?:not|no longer|never)\\s+(?:stuck|stranded|trapped)\\b)|(?:আটকে|আটকা)\\s*(?:নেই|নাই|পড়িনি)'
+  + "|\\b(?:don'?t|do not|no)\\s+need(?:\\s+(?:for\\s+)?(?:any\\s+)?help)?\\b|(?:সাহায্য\\s*)?(?:দরকার|প্রয়োজন)\\s*(?:নেই|নাই)|(?:সাহায্য\\s*)?লাগবে\\s*না");
+const NOT_SAFE = bn('নিরাপদ\\s*(?:নই|নয়|না)|নিরাপদে\\s*(?:নেই|নাই)|not safe|unsafe');
+const RESCUE = bn('আটক|ছাদে|ছাদের|নৌকা|ডুবে|ডুব|stuck|stranded|trapped|roof|boat');
+const MEDICAL = bn('অসুস্থ|আহত|চিকিৎসা|ডাক্তার|medical|injur|hurt|sick|doctor');
+const HELP = bn('^2(?:\\s|[,.!?।]|$)|সাহায্য|উদ্ধার|দরকার|প্রয়োজন|লাগবে|\\bhelp\\b|\\bsos\\b|\\bneed\\b');
+const SAFE = bn('^1(?:\\s|[,.!?।]|$)|নিরাপদ|ঠিক আছি|ভালো আছি|ভাল আছি|\\bsafe\\b|\\bfine\\b|\\bok(?:ay)?\\b|all good');
+
 export function classifyReply(text) {
   const normalized = text.normalize('NFC').toLowerCase().replace(/[০-৯]/g, digit => String('০১২৩৪৫৬৭৮৯'.indexOf(digit))).trim();
-  const count = normalized.match(/\b(\d{1,3})\s*(?:জন|people\b|persons\b)/u);
-  const people = count ? Number(count[1]) || null : null;
-  if (/আটক|আটকে|ছাদে|নৌকা|ডুব|stuck|stranded|roof|boat/.test(normalized)) return { category: 'Rescue', people };
-  if (/অসুস্থ|আহত|চিকিৎসা|medical|injur|hurt/.test(normalized)) return { category: 'Medical', people };
-  if (/^2(?:\s|[,.!?।]|$)|সাহায্য|help|নিরাপদ ন|not safe/.test(normalized)) return { category: 'Help needed', people };
-  if (/^(?:1|নিরাপদ|নিরাপদে আছি|আমি নিরাপদে আছি|আমরা নিরাপদে আছি|safe|i(?: am|'m) safe|we(?: are|'re) safe)[\s.!।]*$/.test(normalized)) return { category: 'Safe', people: null };
+  const digits = normalized.match(/\b(\d{1,3})\s*(?:জন|people\b|persons\b)/u);
+  const words = normalized.match(NUMBER_WORD_COUNT);
+  const people = digits ? Number(digits[1]) || null : words ? NUMBER_WORDS[words[1]] ?? null : null;
+  const cleaned = normalized.replace(new RegExp(NEGATED_DISTRESS.source, 'gu'), ' ');
+  if (RESCUE.test(cleaned)) return { category: 'Rescue', people };
+  if (MEDICAL.test(cleaned)) return { category: 'Medical', people };
+  if (NOT_SAFE.test(cleaned) || HELP.test(cleaned)) return { category: 'Help needed', people };
+  if (SAFE.test(cleaned)) return { category: 'Safe', people: null };
   return { category: 'Needs review', people };
 }
 
@@ -151,13 +178,20 @@ export function receiveReply(state, recipientId, text) {
   if (!recipient || !message || message.length > 280) return false;
   const { category, people } = classifyReply(message);
   recipient.status = category;
-  if (category !== 'Safe') {
-    const active = state.cases.find(item => item.recipientId === recipientId && !item.resolved);
+  const active = state.cases.find(item => item.recipientId === recipientId && !item.resolved);
+  if (category === 'Safe') {
+    // A household that reports safe no longer needs a boat: close its open case and say why.
+    if (active) {
+      active.resolved = true;
+      active.resolution = `Reported safe at ${timeline[state.tick].time}`;
+    }
+  } else {
     const incident = { recipientId, name: recipient.name, category, people, text: message, tick: state.tick };
     if (active) Object.assign(active, incident);
     else state.cases.unshift({ id: state.cases.length + 1, ...incident });
   }
-  log(state, 'Rescue Triage', `${recipient.name} replied. Classified as ${category.toLowerCase()}.`);
+  log(state, 'Rescue Triage', `${recipient.name} replied. Classified as ${category.toLowerCase()}.`
+    + (category === 'Safe' && active ? ` Closed their open case.` : ''));
   return true;
 }
 
@@ -171,9 +205,20 @@ export function resolveCase(state, caseId) {
 
 function followUp(state) {
   for (const recipient of state.recipients) {
-    if (recipient.status !== 'Awaiting reply' || recipient.sentAt >= state.tick || recipient.followedUp) continue;
-    send(state, recipient, 'Follow-up', 'Voice call');
-    recipient.followedUp = true;
-    log(state, 'Orchestrator', `Queued a simulated Bangla voice follow-up for ${recipient.name} after no reply.`);
+    if (recipient.status !== 'Awaiting reply' || recipient.sentAt >= state.tick) continue;
+    if (!recipient.followedUp) {
+      send(state, recipient, 'Follow-up', 'Voice call');
+      recipient.followedUp = true;
+      recipient.followedUpAt = state.tick;
+      log(state, 'Orchestrator', `Queued a simulated Bangla voice follow-up for ${recipient.name} after no reply.`);
+    } else if (recipient.followedUpAt < state.tick) {
+      // Still silent after the follow-up call: escalate to a person on the ground.
+      recipient.status = 'No response';
+      state.cases.unshift({
+        id: state.cases.length + 1, recipientId: recipient.id, name: recipient.name, category: 'No response',
+        people: recipient.size, text: 'No reply to the alert or the voice follow-up. Ward volunteer asked to check in person.', tick: state.tick,
+      });
+      log(state, 'Orchestrator', `${recipient.name} is still silent after the follow-up. Escalated to the ward volunteer.`);
+    }
   }
 }

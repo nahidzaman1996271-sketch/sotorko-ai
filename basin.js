@@ -1,0 +1,197 @@
+const WIDTH = 640;
+const HEIGHT = 306;
+const mainRiver = [[244, -28], [299, 17], [288, 49], [333, 84], [324, 122], [373, 153],
+  [365, 202], [417, 231], [404, 267], [483, 322]];
+const tributaries = [
+  [[659, 15], [573, 29], [545, 55], [494, 57], [468, 51], [422, 21], [396, -10]],
+  [[39, 211], [117, 208], [149, 183], [212, 198], [248, 178], [306, 180], [365, 202]],
+  [[655, 203], [571, 182], [524, 204], [479, 198], [417, 231]],
+];
+const stationPositions = { sylhet: [373, 153], chattogram: [494, 57], sunamganj: [417, 231] };
+const indicator = { Normal: '#a0ebcb', Watch: '#ffd48a', Severe: '#ffac94' };
+
+// Sample the illustration's river paths for both strokes and moving flow markers.
+function smooth(points) {
+  const samples = [];
+  for (let i = 0; i < points.length - 1; i++) {
+    const a = points[Math.max(0, i - 1)];
+    const b = points[i];
+    const c = points[i + 1];
+    const d = points[Math.min(points.length - 1, i + 2)];
+    for (let step = 0; step < 16; step++) {
+      const t = step / 16;
+      samples.push(b.map((value, axis) => (
+        value + 0.5 * ((c[axis] - a[axis]) * t
+          + (2 * a[axis] - 5 * value + 4 * c[axis] - d[axis]) * t ** 2
+          + (3 * value - a[axis] - 3 * c[axis] + d[axis]) * t ** 3)
+      )));
+    }
+  }
+  return [...samples, points.at(-1)];
+}
+
+const channels = [mainRiver, ...tributaries].map(smooth);
+function trace(ctx, points) {
+  ctx.beginPath();
+  ctx.moveTo(...points[0]);
+  points.slice(1).forEach(point => ctx.lineTo(...point));
+}
+
+function drawTerrain(ctx) {
+  const sky = ctx.createLinearGradient(0, 0, WIDTH, HEIGHT);
+  sky.addColorStop(0, '#092d26');
+  sky.addColorStop(0.52, '#0d473b');
+  sky.addColorStop(1, '#092c28');
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+  ctx.fillStyle = '#bbefcb27';
+  for (let x = 12; x < WIDTH; x += 20) {
+    for (let y = 8; y < HEIGHT; y += 20) ctx.fillRect(x, y, 1, 1);
+  }
+
+  const contourGroups = [[130, 45, 1.55, 0.32], [360, 291, 1.3, 1.2], [584, 112, 1.52, 2.9]];
+  contourGroups.forEach(([cx, cy, stretch, phase]) => {
+    for (let radius = 21; radius < 154; radius += 8) {
+      const points = Array.from({ length: 121 }, (_, index) => {
+        const angle = 2 * Math.PI * index / 120;
+        const wobble = 1 + 0.17 * Math.sin(angle * 3 + phase) + 0.07 * Math.sin(angle * 6 - phase + radius / 45);
+        return [cx + Math.cos(angle) * radius * stretch * wobble, cy + Math.sin(angle) * radius * wobble];
+      });
+      trace(ctx, points);
+      ctx.strokeStyle = radius % 3 === 0 ? '#b2ead33a' : '#9edabc23';
+      ctx.lineWidth = 0.85;
+      ctx.stroke();
+    }
+  });
+
+  ctx.lineJoin = 'round';
+  for (const [index, points] of channels.entries()) {
+    trace(ctx, points);
+    ctx.lineWidth = index === 0 ? 24 : 12;
+    ctx.strokeStyle = '#073c36b8';
+    ctx.stroke();
+    ctx.lineWidth = index === 0 ? 8 : 3.5;
+    ctx.strokeStyle = index === 0 ? '#31b9956b' : '#369a806d';
+    ctx.stroke();
+    ctx.lineWidth = index === 0 ? 2 : 1;
+    ctx.strokeStyle = index === 0 ? '#a1f3c6be' : '#84d7b060';
+    ctx.stroke();
+  }
+}
+
+export function createBasinGraphic(canvas, button, preference, areas) {
+  const context = canvas.getContext('2d');
+  if (!context) return { update() {}, paused: true };
+  const terrain = document.createElement('canvas');
+  terrain.width = WIDTH * 2;
+  terrain.height = HEIGHT * 2;
+  const ground = terrain.getContext('2d');
+  ground.scale(2, 2);
+  drawTerrain(ground);
+
+  const stations = areas.map(area => ({ label: area.name.toUpperCase(), point: stationPositions[area.id] }));
+  let status = stations.map(() => 'Normal');
+  let visible = true;
+  let manuallyPaused = false;
+  let frame = 0;
+  let last = 0;
+  let elapsed = 0;
+  const paused = () => manuallyPaused || preference.matches;
+
+  function draw() {
+    const { width, height } = canvas.getBoundingClientRect();
+    if (!width || !height) return;
+    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    const pixelsWide = Math.round(width * ratio);
+    const pixelsHigh = Math.round(height * ratio);
+    if (canvas.width !== pixelsWide || canvas.height !== pixelsHigh) {
+      canvas.width = pixelsWide;
+      canvas.height = pixelsHigh;
+    }
+    const scale = Math.max(pixelsWide / WIDTH, pixelsHigh / HEIGHT);
+    context.setTransform(scale, 0, 0, scale, (pixelsWide - WIDTH * scale) * 0.72, (pixelsHigh - HEIGHT * scale) / 2);
+    context.drawImage(terrain, 0, 0, WIDTH, HEIGHT);
+
+    channels.forEach((points, index) => {
+      const count = index === 0 ? 7 : 3;
+      for (let marker = 0; marker < count; marker++) {
+        const progress = (elapsed / (index === 0 ? 6800 : 5300) + marker / count + index * 0.13) % 1;
+        const [x, y] = points[Math.floor(progress * (points.length - 1))];
+        context.fillStyle = index === 0 ? '#cafbe0' : '#a0e8cd';
+        context.globalAlpha = 0.15 + Math.sin(progress * Math.PI) * 0.72;
+        context.beginPath();
+        context.arc(x, y, index === 0 ? 2.2 : 1.4, 0, 2 * Math.PI);
+        context.fill();
+      }
+    });
+    context.globalAlpha = 1;
+
+    stations.forEach(({ point: [x, y], label }, index) => {
+      const color = indicator[status[index]];
+      const phase = paused() ? 0.36 : (elapsed / 2200 + index * 0.27) % 1;
+      context.globalAlpha = (1 - phase) * 0.47;
+      context.beginPath();
+      context.arc(x, y, 7 + phase * 16, 0, 2 * Math.PI);
+      context.strokeStyle = color;
+      context.lineWidth = 1.5;
+      context.stroke();
+      context.globalAlpha = 1;
+      context.fillStyle = '#10352c';
+      context.beginPath();
+      context.arc(x, y, 7.2, 0, 2 * Math.PI);
+      context.fill();
+      context.fillStyle = color;
+      context.beginPath();
+      context.arc(x, y, 4, 0, 2 * Math.PI);
+      context.fill();
+      context.font = `700 ${Math.max(10, 8 * ratio / scale)}px "Segoe UI", sans-serif`;
+      context.letterSpacing = '1px';
+      const labelWidth = context.measureText(label).width;
+      const labelX = x > 450 ? x - 13 - labelWidth : x + 13;
+      context.fillStyle = '#092e25df';
+      context.fillRect(labelX - 5, y - 11, labelWidth + 10, 22);
+      context.fillStyle = '#e5f7ed';
+      context.textBaseline = 'middle';
+      context.fillText(label, labelX, y);
+    });
+  }
+
+  function animate(now) {
+    if (now - last >= 30) {
+      elapsed += last ? Math.min(60, now - last) : 0;
+      last = now;
+      draw();
+    }
+    frame = requestAnimationFrame(animate);
+  }
+
+  function sync() {
+    cancelAnimationFrame(frame);
+    last = 0;
+    button.hidden = preference.matches;
+    button.textContent = manuallyPaused ? 'Play motion' : 'Pause motion';
+    draw();
+    if (visible && !paused()) frame = requestAnimationFrame(animate);
+  }
+
+  button.addEventListener('click', () => {
+    manuallyPaused = !manuallyPaused;
+    sync();
+  });
+  preference.addEventListener('change', sync);
+  new ResizeObserver(draw).observe(canvas);
+  new IntersectionObserver(([entry]) => {
+    visible = entry.isIntersecting;
+    sync();
+  }).observe(canvas);
+  sync();
+
+  return {
+    get paused() { return paused(); },
+    update(severities) {
+      status = severities;
+      draw();
+    },
+  };
+}

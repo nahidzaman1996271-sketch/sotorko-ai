@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#092d26">
+  <title>Sotorko AI | Flood Response Console</title>
+  <link rel="icon" href="/favicon.png">
+  <link rel="stylesheet" href="/style.css">
+  <script type="module" src="/dashboard.js"></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="#overview">
+      <span class="brand-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span><strong>Sotorko AI</strong><small lang="bn">সতর্ক</small></span>
+    </a>
+    <select id="section-jump" aria-label="Jump to a dashboard section"></select>
+    <nav id="console-nav" aria-label="Console">
+      <a href="#overview" aria-current="location"><span aria-hidden="true">◫</span> Overview</a>
+      <a href="#alerts"><span aria-hidden="true">◇</span> Alert approvals</a>
+      <a href="#shelters"><span aria-hidden="true">⌂</span> Shelter capacity</a>
+      <a href="#replies"><span aria-hidden="true">▤</span> Citizen replies</a>
+      <a href="#triage"><span aria-hidden="true">✚</span> Rescue triage</a>
+      <a href="#messages"><span aria-hidden="true">□</span> Outbound messages</a>
+      <a href="#activity"><span aria-hidden="true">≡</span> Activity log</a>
+    </nav>
+    <div class="side-footer">
+      <span>Team Cady Crush</span>
+    </div>
+  </aside>
+  <main>
+    <div class="workspace-bar">
+      <span>Operations <span class="breadcrumb-separator" aria-hidden="true">/</span> <strong>Bangladesh</strong></span>
+      <span class="mode"><i></i> Simulation mode</span>
+    </div>
+    <header id="overview" class="page-header">
+      <div class="hero-copy">
+        <p class="eyebrow">FLOOD REPLAY</p>
+        <h1>Flood response <span>overview</span></h1>
+        <p class="intro">Track river levels, approve Bangla alerts and coordinate the simulated response.</p>
+        <div class="header-actions">
+          <button id="advance" class="button primary" type="button">Advance 15 min</button>
+          <button id="reset" class="button secondary" type="button">Reset demo</button>
+        </div>
+      </div>
+      <div class="basin">
+        <canvas id="basin-art" aria-hidden="true"></canvas>
+        <div class="basin-caption">
+          <span>Illustrative monitoring network</span>
+          <button id="motion-toggle" class="motion-button" type="button" hidden>Pause motion</button>
+        </div>
+      </div>
+    </header>
+    <div class="notice"><span aria-hidden="true">ⓘ</span> Training simulation with fictional readings, households and shelters. All messages and rescue cases stay in the demo.</div>
+    <div id="feedback" class="sr-only" role="status"></div>
+    <div id="summary" class="summary"></div>
+    <div class="overview-grid">
+      <section class="card telemetry" aria-labelledby="river-heading">
+        <div class="section-head">
+          <div><h2 id="river-heading">River level replay</h2><p>Water level by observation time</p></div>
+          <label class="sr-only" for="river">Monitoring area</label>
+          <select id="river"></select>
+        </div>
+        <div class="chart-wrap"><canvas id="chart" role="img" aria-label="Simulated river levels"></canvas></div>
+        <div class="legend"><span><i></i> River level</span><span><i></i> Demo danger threshold</span></div>
+      </section>
+      <section class="card risk-card" aria-labelledby="areas-heading">
+        <div class="section-head"><div><h2 id="areas-heading">Area risk</h2><p>Latest simulated monitoring results</p></div></div>
+        <div id="areas" class="area-list"></div>
+      </section>
+    </div>
+    <div class="overview-grid response-grid">
+      <section id="alerts" class="card">
+        <div class="section-head"><div><h2>Alert approvals</h2><p>Severe alerts require an officer decision.</p></div></div>
+        <div id="approval-list" class="stack"></div>
+      </section>
+      <section id="shelters" class="card">
+        <div class="section-head"><div><h2>Shelter capacity</h2><p>Available places account for demo reservations.</p></div></div>
+        <div id="shelter-list" class="stack"></div>
+      </section>
+    </div>
+    <div class="overview-grid response-grid">
+      <section id="replies" class="card">
+        <div class="section-head"><div><h2>Citizen replies</h2><p>Send a simulated Bangla text or keypad reply.</p></div></div>
+        <p id="reply-empty" class="empty">Approve an alert to unlock replies from demo households.</p>
+        <form id="reply-form" hidden>
+          <label for="household">Household</label>
+          <select id="household"></select>
+          <label for="reply-text">Reply</label>
+          <textarea id="reply-text" lang="bn" required maxlength="280" rows="2" placeholder="আমরা আটকে আছি, ৫ জন"></textarea>
+          <div class="form-actions">
+            <button class="button secondary" type="button" data-action="sample" data-id="১">Safe · ১</button>
+            <button class="button secondary" type="button" data-action="sample" data-id="আমরা আটকে আছি, ৫ জন">Rescue sample</button>
+            <button class="button primary" type="submit">Submit reply</button>
+          </div>
+        </form>
+        <div id="recipient-list" class="stack"></div>
+      </section>
+      <section id="triage" class="card">
+        <div class="section-head"><div><h2>Rescue triage</h2><p>Simulated cases for officer review.</p></div></div>
+        <div id="case-list" class="stack"></div>
+      </section>
+    </div>
+    <div class="overview-grid response-grid">
+      <section id="messages" class="card">
+        <div class="section-head"><div><h2>Outbound messages</h2><p>Bangla SMS, WhatsApp and voice call previews.</p></div></div>
+        <div id="message-list" class="stack scroll-list"></div>
+      </section>
+      <section id="activity" class="card">
+        <div class="section-head"><div><h2>Activity log</h2><p>Agent actions and officer decisions in replay order.</p></div></div>
+        <div id="activity-list" class="stack scroll-list"></div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

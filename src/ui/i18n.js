@@ -3,6 +3,14 @@ const languages = ['en', 'bn'];
 
 // Pairs keep the languages side by side and make changes to the interface easy to review.
 const strings = {
+  'shift.title': ['District shift handover', 'জেলাভিত্তিক দায়িত্ব হস্তান্তর'],
+  'shift.time': ['Simulation snapshot · {time}', 'মহড়ার বর্তমান অবস্থা · {time}'],
+  'shift.download': ['Download handover', 'প্রতিবেদন ডাউনলোড'],
+  'shift.figures': ['Households alerted: {alerted} · Reported safe: {safe} · Awaiting reply: {awaiting} · Open cases: {open}', 'সতর্কবার্তা পাঠানো পরিবার: {alerted} · নিরাপদ বলে জানিয়েছে: {safe} · উত্তরের অপেক্ষায়: {awaiting} · চলমান কেস: {open}'],
+  'shift.triage': ['Review open cases', 'চলমান কেস দেখুন'],
+  'shift.alerts': ['Review pending alert', 'অপেক্ষমাণ সতর্কবার্তা দেখুন'],
+  'shift.replies': ['Check household replies', 'পরিবারগুলোর উত্তর দেখুন'],
+  'shift.river-panel': ['Monitor river levels', 'নদীর পানির স্তর দেখুন'],
   'page.title': ['Sotorko AI | Flood Response Console', 'সতর্ক এআই | বন্যা মোকাবিলা ড্যাশবোর্ড'],
   'nav.label': ['Dashboard sections', 'ড্যাশবোর্ডের বিভাগ'],
   'nav.jump': ['Jump to a dashboard section', 'ড্যাশবোর্ডের একটি বিভাগ বেছে নিন'],

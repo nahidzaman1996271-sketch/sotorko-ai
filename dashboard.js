@@ -3,6 +3,7 @@ import {
 } from './simulation.js';
 import { createBasinGraphic } from './basin.js';
 import { householdMessages, phoneReply } from './src/ui/citizenPhone.js';
+import { shiftHandover } from './src/ui/handover.js';
 import { guideStep } from './src/ui/guidedDemo.js';
 import { formatNumber, formatTime, readLanguage, t, translateStatic, writeLanguage } from './src/ui/i18n.js';
 
@@ -76,6 +77,16 @@ const agentIcons = {
   'Bangla Communicator': 'notify', 'Rescue Triage': 'triage', Orchestrator: 'escalate',
 };
 
+element('shift-download').addEventListener('click', () => {
+  const report = shiftHandover(state, language).report;
+  const url = URL.createObjectURL(new Blob(['\uFEFF', report], { type: 'text/plain;charset=utf-8' }));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `sotorko-handover-${timeline[state.tick].time.replace(':', '')}-${language}.txt`;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+
 river.addEventListener('change', () => {
   chartIndex = null;
   drawChart();
@@ -88,6 +99,9 @@ function render(replayAdvanced = false, animateChanges = false) {
   river.value = currentRiver || '0';
   element('advance').disabled = state.tick === timeline.length - 1;
   element('advance').textContent = translate(element('advance').disabled ? 'hero.complete' : 'hero.advance');
+  const brief = shiftHandover(state, language);
+  element('shift-stamp').textContent = brief.stamp;
+  element('shift-districts').innerHTML = brief.districts.map(d => `<article data-priority="${d.action}"><h3>${esc(d.name)}</h3><p class="meta">${esc(d.summary)}</p><a href="#${d.action}" aria-label="${esc(d.name)} · ${esc(d.next)}">${esc(d.next)} →</a></article>`).join('');
   renderMetrics(animateChanges);
   renderPipeline();
   element('overview').style.setProperty('--replay-progress', state.tick / (timeline.length - 1));
